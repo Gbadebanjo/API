@@ -8,10 +8,18 @@ const express_1 = __importDefault(require("express"));
 const path_1 = __importDefault(require("path"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const morgan_1 = __importDefault(require("morgan"));
+const cors_1 = __importDefault(require("cors"));
 const index_1 = __importDefault(require("./routes/index"));
 const users_1 = __importDefault(require("./routes/users"));
 // import from 'express';
 const app = (0, express_1.default)();
+app.use((0, cors_1.default)({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
+app.get('/test', (req, res) => {
+    res.json('Hello World!');
+});
 // view engine setup
 app.set('views', path_1.default.join(__dirname, '../views'));
 app.set('view engine', 'ejs');
@@ -35,5 +43,4 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
-console.log('app is running on http://localhost:' + 3000);
 exports.default = app;

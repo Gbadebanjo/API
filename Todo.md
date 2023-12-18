@@ -21,3 +21,9 @@ Backend
 
 [] Each product should have more informations or picture
 
+
+
+
+Other Todos
+[ ] Utilize api
+[ ] Use a payment service Api
