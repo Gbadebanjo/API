@@ -1,3 +1,4 @@
+import { config } from 'dotenv';
 import createError from 'http-errors';
 import express, { Request, Response, NextFunction } from 'express';
 import path from 'path';
@@ -5,23 +6,22 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import cors from 'cors';
 
-import indexRouter from './routes/index';
-import usersRouter from './routes/users';
+config();
+
+import indexRouter from './src/routes/index';
+import usersRouter from './src/routes/users';
+
 // import from 'express';
 const app = express();
+
+// view engine setup
+app.set('views', path.join(__dirname, '../views'));
+app.set('view engine', 'ejs');
 
 app.use(cors({
   origin: 'http://localhost:3000',
   credentials: true
 }));
-
-app.get('/test', (req: Request, res: Response) => {
-  res.json('Hello World!');
-});
-
-// view engine setup
-app.set('views', path.join(__dirname, '../views'));
-app.set('view engine', 'ejs');
 
 app.use(logger('dev'));
 app.use(express.json());

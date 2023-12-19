@@ -5,12 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
-/* GET home page. */
+/* GET users listing. */
 router.get('/', function (req, res, next) {
-    res.render('index', { title: 'Express' });
-});
-router.post("/register", (req, res) => {
-    const { name, email, password } = req.body;
-    res.json({ name, email, password });
+    res.send('respond with a resource');
 });
 exports.default = router;
