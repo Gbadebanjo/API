@@ -5,6 +5,7 @@ config(); // Load environment variables from .env file
 
 const URI = process.env.MONGO_URL || "";
 
+
 async function connectDB() {
   try {
     if (!URI) {
