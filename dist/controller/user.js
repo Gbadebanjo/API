@@ -12,13 +12,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.signup = void 0;
+exports.register = void 0;
 const user_1 = __importDefault(require("../model/user"));
 const dotenv_1 = require("dotenv");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const jwt_1 = require("../utility/jwt");
 (0, dotenv_1.config)(); // Load environment variables from .env file
 const salt = process.env.SALT || "";
-function signup(req, res) {
+function register(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const userInput = req.body;
@@ -34,10 +35,28 @@ function signup(req, res) {
                 password: password,
             });
             yield user.save();
-            return res.status(201).json({ message: "User created successfully" });
+            // return res.status(201).json({ message: "User created successfully" });
+            const currentUser = {
+                user: user._id.toString(),
+                admin: user.admin,
+                email: user.email,
+                verifiedEmail: true, // Add the verifiedEmail property and set it to true
+            };
+            req.user = currentUser;
+            const token = (0, jwt_1.generateToken)(currentUser);
+            res.cookie("token", token, {
+                httpOnly: true,
+                maxAge: 1000 * 60 * 60 * 24, // cookie will expire after 24 hours
+            });
+            req.headers.authorization = `Bearer ${token}`;
+            return res.json({ token });
         }
-        finally {
+        catch (err) {
+            return res.status(500).json({
+                message: "Internal server error",
+                error: err,
+            });
         }
     });
 }
-exports.signup = signup;
+exports.register = register;

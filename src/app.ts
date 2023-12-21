@@ -8,8 +8,8 @@ import cors from 'cors';
 
 config();
 
-import indexRouter from './src/routes/index';
-import usersRouter from './src/routes/users';
+import indexRouter from './routes/index';
+import { usersRouter } from './routes/users'; // Fix: Import the named export instead of the default export
 
 // import from 'express';
 const app = express();
