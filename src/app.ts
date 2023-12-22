@@ -9,7 +9,7 @@ import cors from 'cors';
 config();
 
 import indexRouter from './routes/index';
-import { usersRouter } from './routes/users'; // Fix: Import the named export instead of the default export
+import  usersRouter from './routes/users'; // Fix: Import the named export instead of the default export
 
 // import from 'express';
 const app = express();
@@ -29,8 +29,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
 
+
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+// app.use('/admin', adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req: Request, res: Response, next: NextFunction) {

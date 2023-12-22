@@ -6,6 +6,7 @@ interface IUser extends mongoose.Document {
   email: string;
   password: string;
   admin: boolean;
+  verifiedEmail: boolean;
 }
 
 /*User Schema*/
@@ -14,7 +15,8 @@ const UserSchema = new Schema(
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    admin: { type: Boolean, default: false }
+    admin: { type: Boolean, default: false },
+    verifiedEmail: {type: Boolean, default: false }
   },
   { timestamps: true }
 );
@@ -22,3 +24,4 @@ const UserSchema = new Schema(
 const User = mongoose.model<IUser>("User", UserSchema);
 
 export default User;
+export { IUser };

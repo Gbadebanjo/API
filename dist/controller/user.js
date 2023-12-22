@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.register = void 0;
+exports.login = exports.register = void 0;
 const user_1 = __importDefault(require("../model/user"));
 const dotenv_1 = require("dotenv");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
@@ -22,8 +22,17 @@ const salt = process.env.SALT || "";
 function register(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            console.log(req.body);
             const userInput = req.body;
+            if (!userInput.email) {
+                return res.status(400).json({ message: "Email is required" });
+            }
             userInput.email = userInput.email.toLowerCase().trim();
+            // Validate email format
+            const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
+            if (!emailRegex.test(userInput.email)) {
+                return res.status(400).json({ message: 'Invalid email format.' });
+            }
             const existingUser = yield user_1.default.findOne({ email: userInput.email });
             if (existingUser) {
                 return res.status(409).json({ message: "User already exists" });
@@ -35,12 +44,11 @@ function register(req, res) {
                 password: password,
             });
             yield user.save();
-            // return res.status(201).json({ message: "User created successfully" });
             const currentUser = {
                 user: user._id.toString(),
                 admin: user.admin,
                 email: user.email,
-                verifiedEmail: true, // Add the verifiedEmail property and set it to true
+                verifiedEmail: user.verifiedEmail,
             };
             req.user = currentUser;
             const token = (0, jwt_1.generateToken)(currentUser);
@@ -52,6 +60,7 @@ function register(req, res) {
             return res.json({ token });
         }
         catch (err) {
+            console.error(err);
             return res.status(500).json({
                 message: "Internal server error",
                 error: err,
@@ -60,3 +69,44 @@ function register(req, res) {
     });
 }
 exports.register = register;
+function login(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const userInput = req.body;
+            if (!userInput.email) {
+                return res.status(400).json({ message: "Email is required" });
+            }
+            userInput.email = userInput.email.toLowerCase().trim();
+            const user = yield user_1.default.findOne({ email: userInput.email });
+            if (!user) {
+                return res.status(401).json({ message: "Invalid email or password" });
+            }
+            const isPasswordValid = yield bcryptjs_1.default.compare(userInput.password, user.password);
+            if (!isPasswordValid) {
+                return res.status(401).json({ message: "Invalid email or password" });
+            }
+            const currentUser = {
+                user: user._id.toString(),
+                admin: user.admin,
+                email: user.email,
+                verifiedEmail: user.verifiedEmail, // Update the type definition of 'user' to include the 'verifiedEmail' property
+            };
+            req.user = currentUser;
+            const token = (0, jwt_1.generateToken)(currentUser);
+            res.cookie("token", token, {
+                httpOnly: true,
+                maxAge: 1000 * 60 * 60 * 24, // cookie will expire after 24 hours
+            });
+            req.headers.authorization = `Bearer ${token}`;
+            return res.json({ token });
+        }
+        catch (err) {
+            console.error(err);
+            return res.status(500).json({
+                message: "Internal server error",
+                error: err,
+            });
+        }
+    });
+}
+exports.login = login;
