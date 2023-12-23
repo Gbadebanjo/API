@@ -49,6 +49,7 @@ function register(req, res) {
                 admin: user.admin,
                 email: user.email,
                 verifiedEmail: user.verifiedEmail,
+                name: user.name,
             };
             req.user = currentUser;
             const token = (0, jwt_1.generateToken)(currentUser);
@@ -90,6 +91,7 @@ function login(req, res) {
                 admin: user.admin,
                 email: user.email,
                 verifiedEmail: user.verifiedEmail, // Update the type definition of 'user' to include the 'verifiedEmail' property
+                name: user.name,
             };
             req.user = currentUser;
             const token = (0, jwt_1.generateToken)(currentUser);

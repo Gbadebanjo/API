@@ -22,7 +22,7 @@ export async function register(req: Request, res: Response) {
     // Validate email format
     const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
     if (!emailRegex.test(userInput.email)) {
-      return res.status(400).json({ message: 'Invalid email format.' });
+      return res.status(400).json({ message: "Invalid email format." });
     }
 
     const existingUser = await User.findOne({ email: userInput.email });
@@ -41,7 +41,8 @@ export async function register(req: Request, res: Response) {
       user: user._id.toString(),
       admin: user.admin,
       email: user.email,
-      verifiedEmail: (user as IUser).verifiedEmail,  
+      verifiedEmail: (user as IUser).verifiedEmail,
+      name: user.name,
     };
     req.user = currentUser;
     const token = generateToken(currentUser);
@@ -61,7 +62,7 @@ export async function register(req: Request, res: Response) {
 }
 
 export async function login(req: Request, res: Response) {
-  try{
+  try {
     const userInput = req.body;
     if (!userInput.email) {
       return res.status(400).json({ message: "Email is required" });
@@ -83,8 +84,9 @@ export async function login(req: Request, res: Response) {
       admin: user.admin,
       email: user.email,
       verifiedEmail: (user as IUser).verifiedEmail, // Update the type definition of 'user' to include the 'verifiedEmail' property
+      name: user.name,
     };
-req.user = currentUser;
+    req.user = currentUser;
     const token = generateToken(currentUser);
     res.cookie("token", token, {
       httpOnly: true,

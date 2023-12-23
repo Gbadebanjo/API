@@ -9,6 +9,7 @@ export interface Payload {
   user: string;
   admin: boolean;
   verifiedEmail: boolean;
+  name: string;
 }
 
 interface PayloadReturn extends Payload {
