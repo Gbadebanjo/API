@@ -31,7 +31,7 @@ function register(req, res) {
             // Validate email format
             const emailRegex = /^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$/;
             if (!emailRegex.test(userInput.email)) {
-                return res.status(400).json({ message: 'Invalid email format.' });
+                return res.status(400).json({ message: "Invalid email format." });
             }
             const existingUser = yield user_1.default.findOne({ email: userInput.email });
             if (existingUser) {
