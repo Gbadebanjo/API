@@ -34,25 +34,12 @@ export async function makeAdmin(req: Request, res: Response) {
 
 export async function addProduct(req: Request, res: Response) {
 
-  const { name, price, description, imageUrls} = req.body;
+  const { name, price, description } = req.body;
 
   if (!name || !price || !description || !req.file) {
-    // return res.status(400).json({ error: 'Missing product details' });
-    if (!name) {
-      return res.status(400).json({ error: 'Missing name' });
-    }
-    if (!price) {
-      return res.status(400).json({ error: 'Missing price' });
-    }
-    if (!description) {
-      return res.status(400).json({ error: 'Missing description' });
-    }
-    if (!req.file) {
-      return res.status(400).json({ error: 'Missing image file' });
-    }
+    return res.status(400).json({ error: 'Missing product details' });
   }
 
-  console.log(imageUrls);
   const picture = req.file.path;
 
   const newProduct: IProduct = new Product({

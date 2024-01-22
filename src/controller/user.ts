@@ -5,6 +5,7 @@ import { Request } from "../config/type.custom";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utility/jwt";
 import { IUser } from "../model/user"; // Import the IUser interface
+import Product from '../model/product';
 
 config(); // Load environment variables from .env file
 
@@ -101,4 +102,17 @@ export async function login(req: Request, res: Response) {
       error: err,
     });
   }
+}
+
+export async function getProducts(req: Request, res: Response) {
+try {
+  const products = await Product.find();
+  res.json(products);
+} catch (error) {
+console.error(error);
+return res.status(500).json({
+  message: "Internal server error",
+  error: error,
+});
+}
 }

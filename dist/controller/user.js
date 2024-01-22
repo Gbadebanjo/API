@@ -12,11 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.login = exports.register = void 0;
+exports.getProducts = exports.login = exports.register = void 0;
 const user_1 = __importDefault(require("../model/user"));
 const dotenv_1 = require("dotenv");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jwt_1 = require("../utility/jwt");
+const product_1 = __importDefault(require("../model/product"));
 (0, dotenv_1.config)(); // Load environment variables from .env file
 const salt = process.env.SALT || "";
 function register(req, res) {
@@ -112,3 +113,19 @@ function login(req, res) {
     });
 }
 exports.login = login;
+function getProducts(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const products = yield product_1.default.find();
+            res.json(products);
+        }
+        catch (error) {
+            console.error(error);
+            return res.status(500).json({
+                message: "Internal server error",
+                error: error,
+            });
+        }
+    });
+}
+exports.getProducts = getProducts;

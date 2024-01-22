@@ -1,6 +1,6 @@
 import express  from 'express';
 const router = express.Router();
-import { register, login } from '../controller/user';
+import { register, login, getProducts } from '../controller/user';
 
 
 /* GET home page. */
@@ -12,5 +12,6 @@ router.post('/register', register);
 
 router.post('/login', login) 
 
+router.get('/products', getProducts)
 
 export default router;
