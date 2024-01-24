@@ -59,3 +59,29 @@ export async function addProduct(req: Request, res: Response) {
   }
 
 };
+
+async function deleteProduct(req: Request, res: Response) {
+  const { id } = req.params;
+  try {
+    await Product.findByIdAndDelete(id);
+    res.status(200).json({ message: 'Product deleted successfully' });
+  } catch (error) {
+    console.error((error as Error).message);
+    console.error((error as Error).stack);
+    res.status(500).json({ error: 'Error deleting product' });
+  }
+}
+
+async function updateProduct(req: Request, res: Response) {
+  const { id } = req.params;
+  const { name, price, description } = req.body;
+  const picture = req.file.path;
+  try {
+    await Product.findByIdAndUpdate(id, { name, price, description, picture });
+    res.status(200).json({ message: 'Product updated successfully' });
+  } catch (error) {
+    console.error((error as Error).message);
+    console.error((error as Error).stack);
+    res.status(500).json({ error: 'Error updating product' });
+  }
+}
