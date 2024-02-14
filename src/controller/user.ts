@@ -5,7 +5,7 @@ import { Request } from "../config/type.custom";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../utility/jwt";
 import { IUser } from "../model/user"; // Import the IUser interface
-import Product from '../model/product';
+import Product from "../model/product";
 
 config(); // Load environment variables from .env file
 
@@ -105,32 +105,31 @@ export async function login(req: Request, res: Response) {
 }
 
 export async function getProducts(req: Request, res: Response) {
-try {
-  const products = await Product.find();
-  res.json(products);
-} catch (error) {
-console.error(error);
-return res.status(500).json({
-  message: "Internal server error",
-  error: error,
-});
-}
+  console.log("Fetching products...");
+  try {
+    const products = await Product.find();
+    res.json(products);
+  } catch (error) {
+    // console.error(error);
+    return res.status(500).json({
+      message: "Internal server error",
+      error: error,
+    });
+  }
 }
 
 export async function getProductbyId(req: Request, res: Response) {
-try {
-  const product = await Product.findById(req.params.id);
-  if (!product) {
-    return res.status(404).json({ message: "Product not found" });
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    res.json(product);
+  } catch (error) {
+    // console.error(error);
+    return res.status(500).json({
+      message: "Internal server error",
+      error: error,
+    });
   }
-  res.json(product);
-} catch (error) {
-console.error(error);
-return res.status(500).json({
-  message: "Internal server error",
-  error: error,
-});
 }
-}
-
-

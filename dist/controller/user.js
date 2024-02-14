@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getProducts = exports.login = exports.register = void 0;
+exports.getProductbyId = exports.getProducts = exports.login = exports.register = void 0;
 const user_1 = __importDefault(require("../model/user"));
 const dotenv_1 = require("dotenv");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
@@ -115,12 +115,13 @@ function login(req, res) {
 exports.login = login;
 function getProducts(req, res) {
     return __awaiter(this, void 0, void 0, function* () {
+        console.log("Fetching products...");
         try {
             const products = yield product_1.default.find();
             res.json(products);
         }
         catch (error) {
-            console.error(error);
+            // console.error(error);
             return res.status(500).json({
                 message: "Internal server error",
                 error: error,
@@ -129,3 +130,22 @@ function getProducts(req, res) {
     });
 }
 exports.getProducts = getProducts;
+function getProductbyId(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const product = yield product_1.default.findById(req.params.id);
+            if (!product) {
+                return res.status(404).json({ message: "Product not found" });
+            }
+            res.json(product);
+        }
+        catch (error) {
+            // console.error(error);
+            return res.status(500).json({
+                message: "Internal server error",
+                error: error,
+            });
+        }
+    });
+}
+exports.getProductbyId = getProductbyId;
