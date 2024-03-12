@@ -8,6 +8,7 @@ interface IProduct extends Document {
   description: string;
 }
 
+
 /* Product Schema */
 const ProductSchema = new Schema(
   {
@@ -17,10 +18,12 @@ const ProductSchema = new Schema(
     description: { type: String, required: true }
   },
   { timestamps: true }
-);
-
-const Product = mongoose.model<IProduct>("Product", ProductSchema);
-
+  );
+  
+  const Product = mongoose.model<IProduct>("Product", ProductSchema);
+  
+  Product.schema.index({ name: 'text' });
+  
 export default Product;
 export { IProduct };
 

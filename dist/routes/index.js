@@ -14,4 +14,5 @@ router.post('/register', user_1.register);
 router.post('/login', user_1.login);
 router.get('/products', user_1.getProducts);
 router.get('/product/:id', user_1.getProductbyId);
+router.get('/search', user_1.searchProducts);
 exports.default = router;

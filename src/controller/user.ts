@@ -133,3 +133,19 @@ export async function getProductbyId(req: Request, res: Response) {
     });
   }
 }
+
+export async function searchProducts(req: Request, res: Response) {
+  try {
+    const searchTerm = req.query.q;
+    const products = await Product.find({
+      $text: { $search: searchTerm }
+    } as any);
+    res.json(products);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      message: "Internal server error",
+      error: error,
+    });
+  }
+}
